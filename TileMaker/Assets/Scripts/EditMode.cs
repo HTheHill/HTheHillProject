@@ -41,8 +41,10 @@ public class EditMode : MonoBehaviour
         GameObject[] tileObjects = GameObject.FindGameObjectsWithTag("Tile");
         foreach (var tile in tileObjects)
         {
-            Solid solid = new Solid(GameMode.Play, tile.transform.position);
-            tile.GetComponent<TileControl>().SetTileType(solid);
+            Type type = Type.GetType(tile.name);
+            object instance = Activator.CreateInstance(type, GameMode.Edit, tile.transform.position);
+            tile.GetComponent<TileControl>().SetTileType(instance as Tile);
+            
             tiles.Add(tile);
         }
     }
@@ -85,12 +87,12 @@ public class EditMode : MonoBehaviour
                 DeleteTile(mousePoint);
 
                 mousePoint.z = 0f;
-                GameObject tile = Instantiate(tilePrefabDic[selectTileType], mousePoint, Quaternion.identity);
                 
+                GameObject tile = Instantiate(tilePrefabDic[selectTileType], mousePoint, Quaternion.identity);
                 Type type = Type.GetType(selectTileType);
                 object instance = Activator.CreateInstance(type, GameMode.Edit, mousePoint);
-
                 tile.GetComponent<TileControl>().SetTileType(instance as Tile);
+                
                 tiles.Add(tile);
             }
         }
