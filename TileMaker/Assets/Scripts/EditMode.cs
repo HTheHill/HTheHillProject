@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,22 +13,29 @@ public enum GameMode
 
 public class EditMode : MonoBehaviour
 {
-    [SerializeField] private GameObject tilePrefab;
+    [SerializeField] private List<GameObject> tilePrefabs;
     [SerializeField] private List<GameObject> tiles;
 
+    private Dictionary<string, GameObject> tilePrefabDic = new Dictionary<string, GameObject>();
+
     private bool useEraser;
+    private string selectTileType;
 
     private Button eraserButton;
+    private Toggle tgSolid;
+    private Toggle tgFire;
 
     void Awake()
     {
         tiles = new List<GameObject>();
         InitMap();
+        
+        selectTileType = "Solid";
+        InitToggle();
 
-        eraserButton = GameObject.Find("Eraser Button").GetComponent<Button>();
-        eraserButton.onClick.AddListener(OnUseEraser);
+        SetTilePrefabDictionary();
     }
-
+    
     private void InitMap()
     {
         GameObject[] tileObjects = GameObject.FindGameObjectsWithTag("Tile");
@@ -36,6 +44,24 @@ public class EditMode : MonoBehaviour
             Solid solid = new Solid(GameMode.Play, tile.transform.position);
             tile.GetComponent<TileControl>().SetTileType(solid);
             tiles.Add(tile);
+        }
+    }
+
+    private void InitToggle()
+    {
+        eraserButton = GameObject.Find("Eraser Button").GetComponent<Button>();
+        eraserButton.onClick.AddListener(OnUseEraser);
+        tgSolid = GameObject.Find("Solid Toggle").GetComponent<Toggle>();
+        tgSolid.onValueChanged.AddListener(delegate { selectTileType = "Solid"; });
+        tgFire = GameObject.Find("Fire Toggle").GetComponent<Toggle>();
+        tgFire.onValueChanged.AddListener(delegate { selectTileType = "Fire"; });
+    }
+
+    private void SetTilePrefabDictionary()
+    {
+        foreach (var tilePrefab in tilePrefabs)
+        {
+            tilePrefabDic.Add(tilePrefab.name, tilePrefab);
         }
     }
 
@@ -49,7 +75,7 @@ public class EditMode : MonoBehaviour
         }
     }
 
-    void AddTile()
+    private void AddTile()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -59,16 +85,18 @@ public class EditMode : MonoBehaviour
                 DeleteTile(mousePoint);
 
                 mousePoint.z = 0f;
-                GameObject tile = Instantiate(tilePrefab, mousePoint, Quaternion.identity);
-                Solid solid = new Solid(GameMode.Edit, mousePoint);
-            
-                tile.GetComponent<TileControl>().SetTileType(solid);
+                GameObject tile = Instantiate(tilePrefabDic[selectTileType], mousePoint, Quaternion.identity);
+                
+                Type type = Type.GetType(selectTileType);
+                object instance = Activator.CreateInstance(type, GameMode.Edit, mousePoint);
+
+                tile.GetComponent<TileControl>().SetTileType(instance as Tile);
                 tiles.Add(tile);
             }
         }
     }
 
-    void TileEraser()
+    private void TileEraser()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -96,7 +124,7 @@ public class EditMode : MonoBehaviour
         }
     }
 
-    void OnUseEraser()
+    private void OnUseEraser()
     {
         useEraser = !useEraser;
         Debug.Log("Use Eraser : " + useEraser);

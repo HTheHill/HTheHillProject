@@ -39,6 +39,16 @@ public class Solid : Tile
 
     public override void Skill()
     {
-        Debug.Log("기능 추가해주세요!");
+        Debug.Log("Solid!");
+    }
+}
+
+public class Fire : Tile
+{
+    public Fire(GameMode gameState, Vector3 initPosition) : base("Fire", gameState, initPosition) { }
+
+    public override void Skill()
+    {
+        Debug.Log("Fire!");
     }
 }
