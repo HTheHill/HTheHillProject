@@ -24,24 +24,30 @@ public class EditMode : MonoBehaviour
     private Button eraserButton;
     private Toggle tgSolid;
     private Toggle tgFire;
+    private Toggle tgEraser;
+    private Toggle tgUndo;
 
     void Awake()
     {
+        selectTileType = "Solid";
+        SetTilePrefabDictionary();
+        
         tiles = new List<GameObject>();
         InitMap();
         
-        selectTileType = "Solid";
         InitToggle();
-
-        SetTilePrefabDictionary();
     }
     
     private void InitMap()
     {
+        if (tilePrefabDic.Count == 0) SetTilePrefabDictionary();
+        
         GameObject[] tileObjects = GameObject.FindGameObjectsWithTag("Tile");
         foreach (var tile in tileObjects)
         {
-            Type type = Type.GetType(tile.name);
+            string tileType = FindTileType(tile.name);
+            
+            Type type = Type.GetType(tileType);
             object instance = Activator.CreateInstance(type, GameMode.Edit, tile.transform.position);
             tile.GetComponent<TileControl>().SetTileType(instance as Tile);
             
@@ -49,14 +55,30 @@ public class EditMode : MonoBehaviour
         }
     }
 
+    private string FindTileType(string tileName)
+    {
+        foreach (var tilePrefabName in tilePrefabDic.Keys)
+        {
+            if (tileName.Contains(tilePrefabName))
+            {
+                return tilePrefabName;
+            }
+        }
+        
+        return selectTileType == null ? "Solid" : selectTileType;
+    }
+
     private void InitToggle()
     {
-        eraserButton = GameObject.Find("Eraser Button").GetComponent<Button>();
-        eraserButton.onClick.AddListener(OnUseEraser);
         tgSolid = GameObject.Find("Solid Toggle").GetComponent<Toggle>();
         tgSolid.onValueChanged.AddListener(delegate { selectTileType = "Solid"; });
         tgFire = GameObject.Find("Fire Toggle").GetComponent<Toggle>();
         tgFire.onValueChanged.AddListener(delegate { selectTileType = "Fire"; });
+        
+        tgEraser = GameObject.Find("Eraser Toggle").GetComponent<Toggle>();
+        tgEraser.onValueChanged.AddListener(delegate { useEraser = !useEraser; });
+        tgUndo = GameObject.Find("Undo Toggle").GetComponent<Toggle>();
+        tgUndo.onValueChanged.AddListener(delegate {  });
     }
 
     private void SetTilePrefabDictionary()
@@ -109,7 +131,7 @@ public class EditMode : MonoBehaviour
             }
         }
     }
-    
+
     private void DeleteTile(Vector3 mousePoint)
     {
         RaycastHit2D[] hits = Physics2D.RaycastAll(mousePoint, Vector2.zero);
@@ -124,11 +146,5 @@ public class EditMode : MonoBehaviour
                 Destroy(tile);
             }
         }
-    }
-
-    private void OnUseEraser()
-    {
-        useEraser = !useEraser;
-        Debug.Log("Use Eraser : " + useEraser);
     }
 }
