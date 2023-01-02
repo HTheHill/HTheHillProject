@@ -6,11 +6,6 @@ public class TileControl : MonoBehaviour
 {
     private Tile tileType;
 
-    void Update()
-    {
-         
-    }
-
     public void SetTileType(Tile tileType)
     {
         this.tileType = tileType;

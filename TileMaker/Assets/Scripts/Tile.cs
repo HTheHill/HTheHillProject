@@ -52,3 +52,13 @@ public class Fire : Tile
         Debug.Log("Fire!");
     }
 }
+
+public class GoalFlag : Tile
+{
+    public GoalFlag(GameMode gameState, Vector3 initPosition) : base("GoalFlag", gameState, initPosition) { }
+    
+    public override void Skill()
+    {
+        Debug.Log("Goal!");
+    }
+}
