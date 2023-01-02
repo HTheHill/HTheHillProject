@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    [SerializeField] private Vector2 JumpForce = new Vector2(0, 500);
-    [SerializeField] private float speed = 6f;
+    [SerializeField] private Vector2 JumpForce = new Vector2(0, 400);
+    [SerializeField] private float speed = 7f;
     
-    private Rigidbody2D rigidBody;
+    private Rigidbody2D rigid;
     private SpriteRenderer spriteRenderer;
 
     private float xMove;
     private bool isGround;
     void Start()
     {
-        rigidBody = GetComponent<Rigidbody2D>();
+        rigid = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         xMove = 0.0f;
 
@@ -32,14 +32,13 @@ public class PlayerMove : MonoBehaviour
     void Update()
     {
         Movement();
-        CheckGround();
         Jumping();
     }
 
     void Movement()
     {
         xMove = Input.GetAxis("Horizontal");
-        rigidBody.velocity = new Vector2(speed * xMove, rigidBody.velocity.y);
+        rigid.velocity = new Vector2(speed * xMove, rigid.velocity.y);
 
         if (xMove != 0)
         {
@@ -49,6 +48,20 @@ public class PlayerMove : MonoBehaviour
 
     }
     void FlipX(float xMove) => spriteRenderer.flipX = xMove == -1;
+
+    void Jumping()
+    {
+        CheckGround();
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            if (isGround)
+            {
+                rigid.velocity = Vector2.zero;
+                rigid.AddForce(JumpForce);
+            }
+        }
+    }
     
     void CheckGround()
     {
@@ -58,17 +71,5 @@ public class PlayerMove : MonoBehaviour
 
         isGround = Physics2D.OverlapCircle((Vector2)transform.position + new Vector2(0, -distance), 0.07f,
             1 << LayerMask.NameToLayer("Ground"));
-    }
-
-    void Jumping()
-    {
-        if (Input.GetButtonDown("Jump"))
-        {
-            if (isGround)
-            {
-                rigidBody.velocity = Vector2.zero;
-                rigidBody.AddForce(JumpForce);
-            }
-        }
     }
 }
