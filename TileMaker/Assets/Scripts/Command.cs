@@ -2,41 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum WorkType 
-{
-    Add,
-    Delete
-}
-
 public interface ICommand
 {
-    // public void Execute();
-    public void Undo(EditMode editMode, Command command);
+    public void Execute(EditMode editMode, Vector3 position, string tileType);
+    public void Undo(EditMode editMode);
 }
 
-public class Command : ICommand
+public class AddCommand : ICommand
 {
-    private Tile tile;
     private Vector3 position;
-    private WorkType workType;
     
-    public Command(Tile tile, Vector3 position, WorkType workType)
+    public void Execute(EditMode editMode, Vector3 position, string tileType)
     {
-        this.tile = tile;
         this.position = position;
-        this.workType = workType;
+        editMode.CreateTile(this.position, tileType);
     }
-
-    public void Undo(EditMode editMode, Command command)
+    
+    public void Undo(EditMode editMode)
     {
-        switch (command.workType)
-        {
-            case WorkType.Add :
-                editMode.DeleteTile(command.position);
-                break;
-            case WorkType.Delete :
-                editMode.CreateTile(command.position, command.tile.TileName);
-                break;
-        }
+        editMode.DeleteTile(position);
+    }
+}
+
+public class DeleteCommand : ICommand
+{
+    private Vector3 position;
+    private string tileType;
+    public string TileType { get { return tileType; } }
+    
+    public void Execute(EditMode editMode, Vector3 position, string tileType = "no tile")
+    {
+        this.position = position;
+        this.tileType = editMode.DeleteTile(this.position);
+    }
+    
+    public void Undo(EditMode editMode)
+    {
+        editMode.CreateTile(position, tileType);
     }
 }
