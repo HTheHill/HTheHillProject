@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 786573075322114549}
   - component: {fileID: -4359039760587088612}
   m_Layer: 0
-  m_Name: GoalFlag
+  m_Name: Fire
   m_TagString: Tile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.09803921, g: 0.5352908, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.18396229, b: 0.30056044, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
