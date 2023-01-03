@@ -102,8 +102,10 @@ public class EditMode : MonoBehaviour
         GameObject tile = Instantiate(tilePrefabDic[tileType], mousePoint, Quaternion.identity, gameObject.transform);
         
         Type type = Type.GetType(tileType);
-        tile.GetComponent<TileObject>().CreateTile(GameMode.Edit, mousePoint, type);
+        tile.GetComponent<TileObject>().CreateTile(mousePoint, type);
         TileObject tileObj = tile.GetComponent<TileObject>();
+        // TileObject tileObj = tile.AddComponent<TileObject>();
+        // tileObj.CreateTile(mousePoint, type);
 
         tiles.Add(tile);
         
