@@ -42,7 +42,7 @@ public class EditMode : MonoBehaviour
         FindObjectOfType<InitMapSetting>().enabled = true;
     }
 
-    private void InitToggle()
+    public void InitToggle()
     {
         tgSolid = GameObject.Find("Solid Toggle").GetComponent<Toggle>();
         tgSolid.onValueChanged.AddListener(delegate { selectTileType = "Solid"; });
