@@ -31,7 +31,7 @@ public class EditMode : MonoBehaviour
     private Toggle tgEraser;
     private Toggle tgUndo;
 
-    void Awake()
+    void OnEnable()
     {
         selectTileType = "Solid";
         SetTilePrefabDictionary();
