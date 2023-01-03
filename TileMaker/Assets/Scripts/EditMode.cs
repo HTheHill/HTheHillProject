@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems; 
@@ -22,7 +23,6 @@ public class EditMode : MonoBehaviour
     [HideInInspector] public bool isSetting;
     private bool useEraser;
     private string selectTileType;
-    private string noTileMessege = "no tile";
 
     private Button eraserButton;
     private Toggle tgSolid;
@@ -67,9 +67,11 @@ public class EditMode : MonoBehaviour
 
     void Update()
     {
-        AddTile();
-
-        if (useEraser)
+        if (!useEraser)
+        {
+            AddTile();
+        }
+        else if (useEraser)
         {
             TileEraser();
         }
@@ -86,7 +88,7 @@ public class EditMode : MonoBehaviour
 
                 DeleteCommand deleteCommand = new DeleteCommand();
                 deleteCommand.Execute(this, mousePoint);
-                if(deleteCommand.TileType != noTileMessege) commands.Push(deleteCommand);
+                if(!object.ReferenceEquals(deleteCommand.TileObject, null)) commands.Push(deleteCommand);
 
                 AddCommand addCommand = new AddCommand();
                 addCommand.Execute(this, mousePoint, selectTileType);
@@ -95,14 +97,17 @@ public class EditMode : MonoBehaviour
         }
     }
 
-    public void CreateTile(Vector3 mousePoint, string tileType)
+    public TileObject CreateTile(Vector3 mousePoint, string tileType)
     {
         GameObject tile = Instantiate(tilePrefabDic[tileType], mousePoint, Quaternion.identity, gameObject.transform);
+        
         Type type = Type.GetType(tileType);
-        object instance = Activator.CreateInstance(type, GameMode.Edit, mousePoint);
-        tile.GetComponent<TileControl>().SetTileType(instance as TileType);
+        tile.GetComponent<TileObject>().CreateTile(GameMode.Edit, mousePoint, type);
+        TileObject tileObj = tile.GetComponent<TileObject>();
 
         tiles.Add(tile);
+        
+        return tileObj;
     }
 
     private void TileEraser()
@@ -116,12 +121,12 @@ public class EditMode : MonoBehaviour
                 
                 DeleteCommand deleteCommand = new DeleteCommand();
                 deleteCommand.Execute(this, mousePoint);
-                if(deleteCommand.TileType != noTileMessege) commands.Push(deleteCommand);
+                if(!object.ReferenceEquals(deleteCommand.TileObject, null)) commands.Push(deleteCommand);
             }
         }
     }
-
-    public string DeleteTile(Vector3 mousePoint)
+   
+    public TileObject DeleteTile(Vector3 mousePoint)
     {
         RaycastHit2D[] hits = Physics2D.RaycastAll(mousePoint, Vector2.zero);
 
@@ -130,19 +135,19 @@ public class EditMode : MonoBehaviour
             if (hit.transform.CompareTag("Tile"))
             {
                 GameObject tile = hit.transform.gameObject;
-                TileType tileType = tile.GetComponent<TileControl>().GetTileType();
+                TileObject tileObj = tile.GetComponent<TileObject>();
 
                 tiles.Remove(tile);
-                Destroy(tile);
+                tile.GetComponent<TileObject>().DeleteTile();
 
-                return tileType.TileName;
+                return tileObj;
             }
         }
 
-        return noTileMessege;
+        return null;
     }
 
-    private void WorkUndo()
+    public void WorkUndo()
     {
         if (commands.Count == 0)
         {
