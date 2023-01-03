@@ -100,7 +100,7 @@ public class EditMode : MonoBehaviour
         GameObject tile = Instantiate(tilePrefabDic[tileType], mousePoint, Quaternion.identity, gameObject.transform);
         Type type = Type.GetType(tileType);
         object instance = Activator.CreateInstance(type, GameMode.Edit, mousePoint);
-        tile.GetComponent<TileControl>().SetTileType(instance as Tile);
+        tile.GetComponent<TileControl>().SetTileType(instance as TileType);
 
         tiles.Add(tile);
     }
@@ -130,7 +130,7 @@ public class EditMode : MonoBehaviour
             if (hit.transform.CompareTag("Tile"))
             {
                 GameObject tile = hit.transform.gameObject;
-                Tile tileType = tile.GetComponent<TileControl>().GetTileType();
+                TileType tileType = tile.GetComponent<TileControl>().GetTileType();
 
                 tiles.Remove(tile);
                 Destroy(tile);

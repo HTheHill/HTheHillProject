@@ -1106,12 +1106,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1008475021}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bdc4ba53a3b0429ca846e7afec4a38e, type: 3}
+  m_Script: {fileID: 11500000, guid: 00056d7b5cee442e0b217230326d89a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrefabs:
-  - {fileID: 1418934909070194012, guid: 6f9bbdcd5d5de4feda3864eadcfb5dc7, type: 3}
-  - {fileID: 1418934909070194012, guid: 85e2cf51350e14025a34566637f7149b, type: 3}
+  - {fileID: 1418934909070194012, guid: 13e25de3ecfc4457d9ad3d8378bf0522, type: 3}
+  - {fileID: 1418934909070194012, guid: cde070aa4330448cdb1e7c1b2a8f7d5a, type: 3}
   - {fileID: 1418934909070194012, guid: 4fb3e5ba82e6c4504a14198b923d3133, type: 3}
   tiles: []
   isSetting: 0
