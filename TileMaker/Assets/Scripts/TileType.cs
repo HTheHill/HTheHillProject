@@ -5,28 +5,11 @@ using UnityEngine;
 public abstract class TileType
 {
     private string tileName;
-    private GameMode gameState;
-    private Vector3 initPosition;
+    public string TileName { get { return tileName; } }
 
-    public string TileName
-    {
-        get { return tileName; }
-    } // get
-    public GameMode GameState
-    {
-        get { return gameState; }
-        set { gameState = value; }
-    } // get set
-    public Vector3 InitPosition
-    {
-        get { return initPosition; }
-    } // get
-    
-    public TileType(string tileName, GameMode gameState, Vector3 initPosition)
+    public TileType(string tileName)
     {
         this.tileName = tileName;
-        this.gameState = gameState;
-        this.initPosition = initPosition;
     }
     
     public abstract void Skill();
@@ -34,7 +17,7 @@ public abstract class TileType
 
 public class Solid : TileType
 {
-    public Solid(GameMode gameState, Vector3 initPosition) : base("Solid", gameState, initPosition) { }
+    public Solid() : base("Solid") { }
 
     public override void Skill()
     {
@@ -44,7 +27,7 @@ public class Solid : TileType
 
 public class Fire : TileType
 {
-    public Fire(GameMode gameState, Vector3 initPosition) : base("Fire", gameState, initPosition) { }
+    public Fire() : base("Fire") { }
 
     public override void Skill()
     {
@@ -54,7 +37,7 @@ public class Fire : TileType
 
 public class GoalFlag : TileType
 {
-    public GoalFlag(GameMode gameState, Vector3 initPosition) : base("GoalFlag", gameState, initPosition) { }
+    public GoalFlag() : base("GoalFlag") { }
     
     public override void Skill()
     {
