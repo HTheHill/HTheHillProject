@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Test_GameController : MonoBehaviour
+public class Test_TileMapMaker : MonoBehaviour
 {
     // 타일 구성 보여주는 2차원 배열
     private int[][] level = new int[][]
@@ -59,9 +59,9 @@ public class Test_GameController : MonoBehaviour
                     //  x좌표: xPos(배열에서의 열 index)
                     //  y좌표: 배열 길이 - yPos(배열에서의 행 index)
                         // 만약 0, 0이면 y좌표 == 25-0 == 25
-                    Transform newObject = Instantiate(wall, new Vector2(xPos, (level.Length - yPos)), wall.rotation);
+                    Transform newObject = Instantiate(wall, new Vector2(xPos, (level.Length - yPos)-1), wall.rotation);
                     
-                    //dynamic object의 자식으로 생성
+                    //(Test)DynamicObjects의 자식으로 생성
                     newObject.SetParent(dynamicParent.transform);
                 }
             }

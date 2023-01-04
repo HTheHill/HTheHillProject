@@ -14,6 +14,7 @@ public class TileObject : MonoBehaviour
     public GameMode GameMode { get { return gameMode; } set { gameMode = value; } }
     public Vector3 InitPosition { get { return initPosition; } }
     public TileType TileType { get { return tileType; } }
+    
 
     public void CreateTile(Vector3 initPosition, Type type)
     {
