@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2355197187946785601}
   - component: {fileID: 786573075322114549}
   - component: {fileID: -4359039760587088612}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GoalFlag
   m_TagString: Tile
   m_Icon: {fileID: 0}

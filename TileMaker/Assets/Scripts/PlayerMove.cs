@@ -65,7 +65,6 @@ public class PlayerMove : MonoBehaviour
     
     void CheckGround()
     {
-        // 바닥 체크용 circle의 크기: collider의 반?? 이게 뭐였지
         float distance = (GetComponent<CapsuleCollider2D>().size.y / 2 *
                           transform.localScale.y) + .01f;
 
