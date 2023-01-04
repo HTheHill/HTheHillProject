@@ -5,11 +5,15 @@ using UnityEngine;
 public abstract class TileType
 {
     private string tileName;
+    private GameMode gameMode;
+    
     public string TileName { get { return tileName; } }
+    public GameMode GameMode { get { return gameMode; } }
 
-    public TileType(string tileName)
+    public TileType(string tileName, GameMode gameMode = GameMode.Edit)
     {
         this.tileName = tileName;
+        this.gameMode = gameMode;
     }
     
     public abstract void Skill();
