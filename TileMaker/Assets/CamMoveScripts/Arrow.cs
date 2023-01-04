@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class DownArrow : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class Arrow : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     bool isPressed;
     MoveCame mvCam;
