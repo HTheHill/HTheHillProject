@@ -35,6 +35,6 @@ public class DeleteCommand : ICommand
     
     public void Undo(EditMode editMode)
     {
-        editMode.CreateTile(tileObject.InitPosition, tileObject.TileType.TileName);
+        editMode.CreateTile(tileObject.InitPosition, tileObject.TileName);
     }
 }

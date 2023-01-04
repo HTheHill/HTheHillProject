@@ -24,7 +24,6 @@ public class EditMode : MonoBehaviour
     private bool useEraser;
     private string selectTileType;
 
-    private Button eraserButton;
     private Toggle tgSolid;
     private Toggle tgFire;
     private Toggle tgGoalFlag;
@@ -149,7 +148,7 @@ public class EditMode : MonoBehaviour
         return null;
     }
 
-    public void WorkUndo()
+    private void WorkUndo()
     {
         if (commands.Count == 0)
         {
