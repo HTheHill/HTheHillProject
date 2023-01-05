@@ -10,6 +10,7 @@ public class GridManager : MonoBehaviour
 
     Dictionary<Vector2, Tile> tiles;
     Camera cam;
+
     private void Start()
     {
         GenerateGrid();

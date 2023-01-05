@@ -1,8 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+public enum Direction
+{
+    Up,
+    Down,
+    Left,
+    Right
+}
+
 
 public class MoveCame : MonoBehaviour
 {
@@ -15,7 +24,9 @@ public class MoveCame : MonoBehaviour
     public float maxZoom = 100f;
     [SerializeField] Button upArrow;
     bool isPressed;
+    Vector3[] vecArray = new Vector3[4] { Vector3.up, Vector3.down, Vector3.left, Vector3.right };
 
+    
     public float camMoveSpeed = 0.5f;
     private void Awake()
     {
@@ -64,6 +75,11 @@ public class MoveCame : MonoBehaviour
 
     #region CameraPositionMove
     
+    public void MoveCam(Direction dir)
+    {
+        transform.Translate(vecArray[(int)dir] * Time.deltaTime * editCam.orthographicSize * camMoveSpeed);
+    }
+
     public void MoveUp()
     {
         transform.Translate(Vector3.up * Time.deltaTime * editCam.orthographicSize * camMoveSpeed);
