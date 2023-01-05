@@ -38,7 +38,7 @@ public class EditMode : MonoBehaviour
         InitToggle();
         
         tiles = new List<GameObject>();
-        FindObjectOfType<InitMapSetting>().enabled = true;
+        // FindObjectOfType<InitMapSetting>().enabled = true;
     }
 
     public void InitToggle()
