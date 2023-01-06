@@ -2801,6 +2801,7 @@ GameObject:
   - component: {fileID: 1295948219}
   - component: {fileID: 1295948218}
   - component: {fileID: 1295948217}
+  - component: {fileID: 1295948220}
   m_Layer: 5
   m_Name: EditButton
   m_TagString: Untagged
@@ -2946,6 +2947,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1295948215}
   m_CullTransparentMesh: 1
+--- !u!114 &1295948220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1295948215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls: []
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls: []
 --- !u!1 &1305518744
 GameObject:
   m_ObjectHideFlags: 0
@@ -4001,6 +4023,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 3310304386347160797, guid: 9589845eb1e8a434683ef0b77624a1bf, type: 3}
   isGameOver: 0
+  isPlaying: 0
 --- !u!4 &1721702425
 Transform:
   m_ObjectHideFlags: 0

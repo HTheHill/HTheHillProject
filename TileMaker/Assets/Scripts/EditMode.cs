@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems; 
 
 public enum GameMode
 {
@@ -33,7 +31,9 @@ public class EditMode : MonoBehaviour
     public bool UseEraser { get { return useEraser; } }
     private string selectTileType;
     public string SelectTileType { get { return selectTileType; } }
-
+    private GameMode gameMode;
+    public GameMode GameMode { get { return gameMode; } }
+    
     private Toggle tgSolid;
     private Toggle tgFire;
     private Toggle tgGoalFlag;
@@ -43,7 +43,9 @@ public class EditMode : MonoBehaviour
     private void OnEnable()
     {
         selectTileType = "Solid";
-        InitToggle();
+        gameMode = GameMode.Play;
+        
+        // InitToggle();
     }
 
     public void InitToggle()
@@ -59,6 +61,11 @@ public class EditMode : MonoBehaviour
         tgEraser.onValueChanged.AddListener(delegate { useEraser = !useEraser; });
         tgUndo = GameObject.Find("Undo Toggle").GetComponent<Toggle>();
         tgUndo.onValueChanged.AddListener(delegate { WorkUndo(); });
+    }
+
+    public void BtnPointerDown()
+    {
+        
     }
 
     private void WorkUndo()
