@@ -40,13 +40,21 @@ public class EditMode : MonoBehaviour
     private Toggle tgEraser;
     private Toggle tgUndo;
 
+    private GameController gameController;
+
     private void OnEnable()
     {
         selectTileType = "Solid";
         gameMode = GameMode.Play;
-        
-        // InitToggle();
+
+        gameController = FindObjectOfType<GameController>();
     }
+
+    private void Update()
+    {
+        gameMode = gameController.isPlaying ? GameMode.Play : GameMode.Edit;
+    }
+
 
     public void InitToggle()
     {
@@ -61,11 +69,6 @@ public class EditMode : MonoBehaviour
         tgEraser.onValueChanged.AddListener(delegate { useEraser = !useEraser; });
         tgUndo = GameObject.Find("Undo Toggle").GetComponent<Toggle>();
         tgUndo.onValueChanged.AddListener(delegate { WorkUndo(); });
-    }
-
-    public void BtnPointerDown()
-    {
-        
     }
 
     private void WorkUndo()
