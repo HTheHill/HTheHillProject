@@ -9,6 +9,7 @@ public class PlayerMove : MonoBehaviour
     
     private Rigidbody2D rigid;
     private SpriteRenderer spriteRenderer;
+    private Animator anim;
 
     private float xMove;
     private bool isGround;
@@ -16,6 +17,7 @@ public class PlayerMove : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
         xMove = 0.0f;
 
         isGround = false;
@@ -38,16 +40,22 @@ public class PlayerMove : MonoBehaviour
     void Movement()
     {
         xMove = Input.GetAxis("Horizontal");
-        rigid.velocity = new Vector2(speed * xMove, rigid.velocity.y);
 
+        rigid.velocity = new Vector2(speed * xMove, rigid.velocity.y);
+        
         if (xMove != 0)
         {
+            anim.SetBool("isWalking", true);
             // xMove가 -1일 때는 SpriteRenderer를 뒤집는다.
             FlipX(xMove);
         }
 
+        else
+        {
+            anim.SetBool("isWalking", false);
+        }
     }
-    void FlipX(float xMove) => spriteRenderer.flipX = xMove == -1;
+    void FlipX(float xMove) => spriteRenderer.flipX = xMove < 0;
 
     void Jumping()
     {
@@ -57,6 +65,8 @@ public class PlayerMove : MonoBehaviour
         {
             if (isGround)
             {
+                anim.SetTrigger("DoJump");
+
                 rigid.velocity = Vector2.zero;
                 rigid.AddForce(JumpForce);
             }
