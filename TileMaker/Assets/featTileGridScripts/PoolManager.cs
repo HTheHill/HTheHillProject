@@ -22,16 +22,13 @@ public class PoolManager : MonoBehaviour
     }
     public void FillObjectPool(Tile obj)
     {
-        obj.gameObject.SetActive(false);
+        //obj.gameObject.SetActive(false);
         objectPool.Enqueue(obj);
     }
-    public void SpawnFromPool(float xPos, float yPos, Quaternion rotation)
+    public Tile SpawnFromPool()
     {
         Tile objecToSpawn = objectPool.Dequeue();
-        objecToSpawn.gameObject.SetActive(true);
-        objecToSpawn.transform.position = new Vector3(xPos, yPos, objecToSpawn.transform.position.z);
-        objecToSpawn.transform.rotation = rotation;
-
+        return objecToSpawn;
     }
     public void GiveBackToPool(Tile tile)
     {

@@ -10,22 +10,52 @@ public class GridManager : MonoBehaviour
 
     Dictionary<Vector2, Tile> tiles;
     Tile[,] objectPools;
+    int[] mapSize;
     Camera cam;
+    int top;
 
     private void Start()
     {
         cam = MoveCame.editCam;
         GenerateGrid();
+
     }
     private void Update()
     {
+        /*when camera's sight is bigger than map's height
+         1. than get tiles from poolManger for one row
+         2. set position for each tile gameobject to its 
+         */
+
         if (cam.gameObject.GetComponent<MoveCame>().GetCamEdgesArr[(int)Direction.Up] >= height)
         {
+            top++;
+            for(int i = 0; i < height; i++)
+            {
+                PoolManager.instance.GiveBackToPool(objectPools[i, 0]);
+                // this code will eventually throw index out of range 
+            }
+            for (int i = 0; i < width; i++)
+            {
+               Tile newTile =  PoolManager.instance.SpawnFromPool();
+                newTile.gameObject.SetActive(true);
+               newTile.transform.position = new Vector2(i,top);
+                objectPools[i,0] = newTile;
+                print(newTile.transform); // becase it called many times 
+                /*
+                 * 
+                 * height + 1 should be current top height +1 ;
+                 p1. it called many time 
+                 */
+            }
+
            // PoolManager.instance.SpawnFromPool();
+            // dont know what to do think i should chang buttom row's coordinate to t
         }
     }
     void GenerateGrid()
     {
+        top = height;
         tiles = new Dictionary<Vector2, Tile>();
         PoolManager.instance.SetPoolMaxSize(width);
         objectPools = new Tile[width,height];
