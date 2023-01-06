@@ -10,12 +10,16 @@ public class TestGridManager : MonoBehaviour
     [SerializeField] private string fileName;
     [SerializeField] private int width, height;
     [SerializeField] private TestTile tilePrefab;
-    public Sprite[] tileSprites;
 
     private int[,] mapAxis;
-    Dictionary<Vector2, TestTile> tiles;
-    Camera cam;
-    
+    private Camera cam;
+    private EditMode editMode;
+
+    private void OnEnable()
+    {
+        editMode = FindObjectOfType<EditMode>();
+    }
+
     private void Start()
     {
         FileReader();
@@ -37,25 +41,10 @@ public class TestGridManager : MonoBehaviour
                 mapAxis[y, x] = data[x];
             }
         }
-
-        // TestFileReader();
     }
 
-    void TestFileReader()
+    private void GenerateGrid()
     {
-        for (int i = 0; i < mapAxis.GetLength(0); i++)
-        {
-            for (int j = 0; j < mapAxis.GetLength(1); j++)
-            {
-                Debug.Log("axis : " + i + "," + j + " : " + mapAxis[i, j]);
-            }
-        }
-    }
-    
-    void GenerateGrid()
-    {
-        tiles = new Dictionary<Vector2, TestTile>();   
-
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -64,22 +53,21 @@ public class TestGridManager : MonoBehaviour
                 spawnedTile.name = $"tile {x} {y}";
 
                 bool isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);
-                Debug.Log(isOffset);
                 spawnedTile.init(isOffset, mapAxis[y, x]);
 
-                tiles[new Vector2(x, y)] = spawnedTile;
+                editMode.tiles[new Vector2(x, y)] = spawnedTile;
             }
         }
-
+        // Change grid position to center
         transform.position = new Vector3(-(width / 2), -(height / 2), 0);
-        
+
         cam = MoveCame.editCam;
         cam.transform.position = new Vector3((float)width / 2 - 0.05f, (float)height / 2 - 0.05f, -10);
     }
-    
+
     public TestTile GetTileAtPosition(Vector2 pos)
     {
-        if (tiles[pos]) return tiles[pos];
+        if (editMode.tiles[pos]) return editMode.tiles[pos];
         else return null;
     }
 }

@@ -12,17 +12,27 @@ public enum GameMode
     Edit
 }
 
+public enum TileNum
+{
+    Default,
+    Solid,
+    Fire,
+    GoalFlag
+}
+
 public class EditMode : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> tilePrefabs;
-    [SerializeField] private List<GameObject> tiles;
-
-    private Dictionary<string, GameObject> tilePrefabDic = new Dictionary<string, GameObject>();
-    private Stack<ICommand> commands = new Stack<ICommand>();
-
-    [HideInInspector] public bool isSetting;
+    public Sprite[] displayTileSprites;
+    public Sprite[] higlightTileSprties;
+    public Sprite[] otherSprites;
+    
+    [HideInInspector] public Stack<ICommand> commands = new Stack<ICommand>();
+    [HideInInspector] public Dictionary<Vector2, TestTile> tiles = new Dictionary<Vector2, TestTile>();
+    
     private bool useEraser;
+    public bool UseEraser { get { return useEraser; } }
     private string selectTileType;
+    public string SelectTileType { get { return selectTileType; } }
 
     private Toggle tgSolid;
     private Toggle tgFire;
@@ -30,15 +40,10 @@ public class EditMode : MonoBehaviour
     private Toggle tgEraser;
     private Toggle tgUndo;
 
-    void OnEnable()
+    private void OnEnable()
     {
         selectTileType = "Solid";
-        SetTilePrefabDictionary();
-        
         InitToggle();
-        
-        tiles = new List<GameObject>();
-        // FindObjectOfType<InitMapSetting>().enabled = true;
     }
 
     public void InitToggle()
@@ -54,98 +59,6 @@ public class EditMode : MonoBehaviour
         tgEraser.onValueChanged.AddListener(delegate { useEraser = !useEraser; });
         tgUndo = GameObject.Find("Undo Toggle").GetComponent<Toggle>();
         tgUndo.onValueChanged.AddListener(delegate { WorkUndo(); });
-    }
-
-    private void SetTilePrefabDictionary()
-    {
-        foreach (var tilePrefab in tilePrefabs)
-        {
-            tilePrefabDic.Add(tilePrefab.name, tilePrefab);
-        }
-    }
-
-    void Update()
-    {
-        if (!useEraser)
-        {
-            AddTile();
-        }
-        else if (useEraser)
-        {
-            TileEraser();
-        }
-    }
-
-    private void AddTile()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (!EventSystem.current.IsPointerOverGameObject())
-            {
-                Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                mousePoint.z = 0f;
-
-                DeleteCommand deleteCommand = new DeleteCommand();
-                deleteCommand.Execute(this, mousePoint);
-                if(!object.ReferenceEquals(deleteCommand.TileObject, null)) commands.Push(deleteCommand);
-
-                AddCommand addCommand = new AddCommand();
-                addCommand.Execute(this, mousePoint, selectTileType);
-                commands.Push(addCommand);
-            }
-        }
-    }
-
-    public TileObject CreateTile(Vector3 mousePoint, string tileType)
-    {
-        GameObject tile = Instantiate(tilePrefabDic[tileType], mousePoint, Quaternion.identity, gameObject.transform);
-        
-        Type type = Type.GetType(tileType);
-        tile.GetComponent<TileObject>().CreateTile(mousePoint, type);
-        TileObject tileObj = tile.GetComponent<TileObject>();
-        // TileObject tileObj = tile.AddComponent<TileObject>();
-        // tileObj.CreateTile(mousePoint, type);
-
-        tiles.Add(tile);
-        
-        return tileObj;
-    }
-
-    private void TileEraser()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (!EventSystem.current.IsPointerOverGameObject())
-            {
-                Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                mousePoint.z = 0f;
-                
-                DeleteCommand deleteCommand = new DeleteCommand();
-                deleteCommand.Execute(this, mousePoint);
-                if(!object.ReferenceEquals(deleteCommand.TileObject, null)) commands.Push(deleteCommand);
-            }
-        }
-    }
-   
-    public TileObject DeleteTile(Vector3 mousePoint)
-    {
-        RaycastHit2D[] hits = Physics2D.RaycastAll(mousePoint, Vector2.zero);
-
-        foreach (var hit in hits)
-        {
-            if (hit.transform.CompareTag("Tile"))
-            {
-                GameObject tile = hit.transform.gameObject;
-                TileObject tileObj = tile.GetComponent<TileObject>();
-
-                tiles.Remove(tile);
-                tile.GetComponent<TileObject>().DeleteTile();
-
-                return tileObj;
-            }
-        }
-
-        return null;
     }
 
     private void WorkUndo()
