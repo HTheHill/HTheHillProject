@@ -38,7 +38,7 @@ public class DownArrow : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     void Update()
     {
         if (isPressed)
-            mvCam.MoveCam(dir);
+            mvCam.MoveDown();
     }
 
    

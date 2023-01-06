@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -25,8 +26,10 @@ public class MoveCame : MonoBehaviour
     [SerializeField] Button upArrow;
     bool isPressed;
     Vector3[] vecArray = new Vector3[4] { Vector3.up, Vector3.down, Vector3.left, Vector3.right };
+    float[] camEdges = new float[4];
+    public float[] GetCamEdgesArr { get { return camEdges; } }
 
-    
+
     public float camMoveSpeed = 0.5f;
     private void Awake()
     {
@@ -46,31 +49,41 @@ public class MoveCame : MonoBehaviour
     {
 
         ZoomInOut();
+        CheckEdges();
+        
     }
     void ZoomInOut()
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (scroll > 0f)
         {
-            Camera.main.orthographicSize -= zoomSpeed;
+            editCam.orthographicSize -= zoomSpeed;
 
             // Limit zoom
-            if (Camera.main.orthographicSize < minZoom)
+            if (editCam.orthographicSize < minZoom)
             {
-                Camera.main.orthographicSize = minZoom;
+                editCam.orthographicSize = minZoom;
             }
         }
         // Zoom out
         else if (scroll < 0f)
         {
-            Camera.main.orthographicSize += zoomSpeed;
+            editCam.orthographicSize += zoomSpeed;
 
             // Limit zoom
-            if (Camera.main.orthographicSize > maxZoom)
+            if (editCam.orthographicSize > maxZoom)
             {
-                Camera.main.orthographicSize = maxZoom;
+                editCam.orthographicSize = maxZoom;
             }
         }
+    }
+    [ContextMenu("Do Something")]
+    public void CheckEdges()
+    {
+        camEdges[(int)Direction.Up] = editCam.ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
+        camEdges[(int)Direction.Down] = editCam.ScreenToWorldPoint(new Vector3(0, 0, 0)).y;
+        camEdges[(int)Direction.Left] = editCam.ScreenToWorldPoint(new Vector3(0, 0, 0)).x;
+        camEdges[(int)Direction.Right] = editCam.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x;
     }
 
     #region CameraPositionMove
