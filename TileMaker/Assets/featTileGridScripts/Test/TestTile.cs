@@ -39,7 +39,7 @@ public class TestTile : MonoBehaviour
     }
     private void OnMouseEnter()
     {
-        // if (editMode.GameMode == GameMode.Play) return;
+        if (editMode.GameMode == GameMode.Play) return;
         
         highlights.SetActive(true);
         if (editMode.UseEraser)
@@ -55,7 +55,7 @@ public class TestTile : MonoBehaviour
     }
     private void OnMouseExit()
     {
-        // if (editMode.GameMode == GameMode.Play) return;
+        if (editMode.GameMode == GameMode.Play) return;
         
         highlightRenderer.sprite = editMode.higlightTileSprties[0];
         highlights.SetActive(false);
@@ -63,9 +63,8 @@ public class TestTile : MonoBehaviour
 
     private void OnMouseDown()
     {
-        // if (editMode.GameMode == GameMode.Play || EventSystem.current.IsPointerOverGameObject()) return;
-        if (EventSystem.current.IsPointerOverGameObject()) return;
-        
+        if (editMode.GameMode == GameMode.Play || EventSystem.current.IsPointerOverGameObject()) return;
+
         if (editMode.UseEraser && spriteRenderer.sprite != editMode.displayTileSprites[0])
         {
             Command command = new Command();
