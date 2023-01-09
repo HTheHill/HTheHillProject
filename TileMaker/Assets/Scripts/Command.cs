@@ -1,40 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
 
 public interface ICommand
 {
-    public void Execute(EditMode editMode, Vector3 position, string tileName = "no tile");
+    public void Execute(TestTile tile, int tileIndex);
     public void Undo(EditMode editMode);
 }
 
-public class AddCommand : ICommand
+public class Command : ICommand
 {
-    private TileObject tileObject;
-    public void Execute(EditMode editMode, Vector3 position, string tileName)
+    private int preTileIndex;
+    private Vector2 position;
+
+    public void Execute(TestTile tile, int tileIndex)
     {
-        tileObject = editMode.CreateTile(position, tileName);
+        position = tile.transform.localPosition;
+        preTileIndex = tile.TileIndex;
+        tile.SetTileType(tileIndex);
     }
     
     public void Undo(EditMode editMode)
     {
-        editMode.DeleteTile(tileObject.InitPosition);
-    }
-}
-
-public class DeleteCommand : ICommand
-{
-    [CanBeNull] private TileObject tileObject;
-    public TileObject TileObject { get { return tileObject; } }
-
-    public void Execute(EditMode editMode, Vector3 position, string tileName = "no tile")
-    {
-        tileObject = editMode.DeleteTile(position);
-    }
-    
-    public void Undo(EditMode editMode)
-    {
-        editMode.CreateTile(tileObject.InitPosition, tileObject.TileName);
+        editMode.tiles[position].SetTileType(preTileIndex);
     }
 }
