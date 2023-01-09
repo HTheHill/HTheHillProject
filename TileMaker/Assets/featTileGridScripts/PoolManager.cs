@@ -22,12 +22,13 @@ public class PoolManager : MonoBehaviour
     }
     public void FillObjectPool(Tile obj)
     {
-        //obj.gameObject.SetActive(false);
+        obj.gameObject.SetActive(false);
         objectPool.Enqueue(obj);
     }
     public Tile SpawnFromPool()
     {
         Tile objecToSpawn = objectPool.Dequeue();
+        objecToSpawn.gameObject.SetActive(true);
         return objecToSpawn;
     }
     public void GiveBackToPool(Tile tile)
