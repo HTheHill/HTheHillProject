@@ -34,12 +34,14 @@ public class GridManager : MonoBehaviour
           ShiftToUp(); 
           // csv check
         }
-        else if (cam.gameObject.GetComponent<MoveCame>().GetCamEdgesArr[(int)Direction.Down] <= down)
+        else if (cam.gameObject.GetComponent<MoveCame>().GetCamEdgesArr[(int)Direction.Down] < down)
         {
+            print("camEdge"+cam.gameObject.GetComponent<MoveCame>().GetCamEdgesArr[(int)Direction.Down]);
             ShiftDown();
         }
-        else if (cam.gameObject.GetComponent<MoveCame>().GetCamEdgesArr[(int)Direction.Left] <= left)
+        else if (cam.gameObject.GetComponent<MoveCame>().GetCamEdgesArr[(int)Direction.Left] < left)
         {
+            print("camEdge"+cam.gameObject.GetComponent<MoveCame>().GetCamEdgesArr[(int)Direction.Left]);
             ShiftLeft();
         }
         else if (cam.gameObject.GetComponent<MoveCame>().GetCamEdgesArr[(int)Direction.Right] >= right)
@@ -67,7 +69,7 @@ public class GridManager : MonoBehaviour
                spawnedTile.transform.position = new Vector2(y, x);
                 // var spawnedTile = Instantiate(tilePrefab,new Vector3(y,x), Quaternion.identity, gridSys.transform);
                 spawnedTile.name = $"tile {x} {y}";
-                print(spawnedTile.name);
+                // print(spawnedTile.name);
                DrawColor(x,y,spawnedTile);
                 visibleTileMap[x,y] = spawnedTile;
                 
@@ -81,6 +83,8 @@ public class GridManager : MonoBehaviour
 
     public void DrawColor(int x, int y,Tile spawnedTile)
     {
+        x = Mathf.Abs(x);
+        y = Mathf.Abs(y);
         var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);
         spawnedTile.init(isOffset);
     }
@@ -121,7 +125,7 @@ public class GridManager : MonoBehaviour
             Tile newTile =  PoolManager.instance.SpawnFromPool();
             newTile.gameObject.SetActive(true);
             newTile.transform.position = new Vector2(i+left,top);
-            DrawColor(i,top,newTile);
+            DrawColor(i+left,top,newTile);
             visibleTileMap[height-1,i] = newTile;
             // print(newTile.transform); // becase it called many times 
             /*
@@ -156,7 +160,7 @@ public class GridManager : MonoBehaviour
             Tile newTile =  PoolManager.instance.SpawnFromPool();
             print(newTile.gameObject.name);
             newTile.gameObject.SetActive(true);
-            DrawColor(i, down, newTile);
+            DrawColor(i+left,down, newTile);
             newTile.transform.position = new Vector2(i+left,down);
             // print(objectPools[0,i].gameObject.name);
             visibleTileMap[0,i] = newTile;
@@ -177,19 +181,25 @@ public class GridManager : MonoBehaviour
         {
             for (int j = width-2; j >= 0; j--)
             {
+                print(i+", "+j);
                 visibleTileMap[i, j+1] = visibleTileMap[i, j];
             }
         }
-        
         left--;
         right--;
         for (int i = 0; i < width; i++)
         {
-            Tile newTile =  PoolManager.instance.SpawnFromPool();
-            newTile.gameObject.SetActive(true);
-            newTile.transform.position = new Vector2(left,i + down);
-            DrawColor(i,top,newTile);
-            visibleTileMap[0,i] = newTile;
+            for (int j = 0; j < height; j++)
+            {
+                if (j == 0)
+                {
+                    Tile newTile =  PoolManager.instance.SpawnFromPool();
+                    newTile.gameObject.SetActive(true);
+                    newTile.transform.position = new Vector2(left,i + down);
+                    DrawColor(left,i + down,newTile);
+                    visibleTileMap[i,j] = newTile;
+                }
+            }
             // print(newTile.transform); // becase it called many times 
             /*
              * 
@@ -218,14 +228,24 @@ public class GridManager : MonoBehaviour
         
         left++;
         right++;
+        StringBuilder sb = new StringBuilder();
+        StringBuilder sb2 = new StringBuilder();
         for (int i = 0; i < width; i++)
         {
-            Tile newTile =  PoolManager.instance.SpawnFromPool();
-            newTile.gameObject.SetActive(true);
-            newTile.transform.position = new Vector2(right,i+ down);
-            print($"<{right} {i+ down}>");
-            DrawColor(i,top,newTile);
-            visibleTileMap[width-1,i] = newTile;
+            for (int j = 0; j < width; j++)
+            {
+                if (j == width - 1)
+                {
+                    Tile newTile =  PoolManager.instance.SpawnFromPool();
+                    newTile.gameObject.SetActive(true);
+                    newTile.transform.position = new Vector2(right,i+ down);
+                    sb.Append($"<{right} {i + down}> ");
+                    sb2.Append($"<{width - 1} {i}> ");
+                    DrawColor(right,i+down,newTile);
+                    visibleTileMap[i,j] = newTile; // 이놈
+                }
+              
+            }
             // print(newTile.transform); // becase it called many times 
             /*
              * 
@@ -233,6 +253,19 @@ public class GridManager : MonoBehaviour
              p1. it called many time 
              */
         }
+
+        // for (int i = 0; i < width; i++)
+        // {
+        //     StringBuilder sd = new StringBuilder();
+        //     for (int j = 0; j < height; j++)
+        //     {
+        //         sd.Append(visibleTileMap[i, j].transform.position);
+        //     }
+        //     print(sd.ToString());
+        // }
+        print(sb.ToString());
+        print(sb2.ToString());
+        
     }
 
 }
