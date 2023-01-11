@@ -37,6 +37,10 @@ public class TestTile : MonoBehaviour
         
         SetTileType(tileIndex);
     }
+    public void init(bool offset)
+    {
+        spriteRenderer.color = offset? baseColor : offsetColor;
+    }
     private void OnMouseEnter()
     {
         if (editMode.GameMode == GameMode.Play || EventSystem.current.IsPointerOverGameObject()) return;

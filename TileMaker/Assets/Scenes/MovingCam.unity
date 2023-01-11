@@ -622,7 +622,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 487029858}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22e9c53ef0d3c5947a726536b8f17cfd, type: 3}
+  m_Script: {fileID: 11500000, guid: bcf63ff9d2fe841b784556528c5b5c79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &487029860
@@ -1123,8 +1123,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 260ee783ecc605b448e920b83e42b9de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 10
-  height: 10
+  width: 50
+  height: 50
   tilePrefab: {fileID: 3414804268270260106, guid: 11a30cc0700526a4a97ffc9e01c1444c, type: 3}
   gridSys: {fileID: 185016450}
 --- !u!4 &1443588497
@@ -1376,6 +1376,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   zoomSpeed: 0.5
   minZoom: 1
-  maxZoom: 4
+  maxZoom: 10
   upArrow: {fileID: 0}
-  camMoveSpeed: 0.5
+  camMoveSpeed: 3

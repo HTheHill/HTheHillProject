@@ -1943,6 +1943,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 699893288}
   m_CullTransparentMesh: 1
+--- !u!1 &719472901
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 719472903}
+  - component: {fileID: 719472902}
+  m_Layer: 0
+  m_Name: PoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &719472902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 719472901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85b7b7f3a376440f399760ab455402a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &719472903
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 719472901}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -128.69748, y: 97.13411, z: -11.505935}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &748263187
 GameObject:
   m_ObjectHideFlags: 0
@@ -2243,7 +2287,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 796406825}
-  - component: {fileID: 796406824}
+  - component: {fileID: 796406826}
   m_Layer: 0
   m_Name: TestGridGenerator
   m_TagString: Untagged
@@ -2251,22 +2295,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &796406824
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 796406823}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e225d672a202c4b0e8a8d03e9c4cbbf7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fileName: initMap.csv
-  width: 50
-  height: 50
-  tilePrefab: {fileID: 7550841005411506979, guid: a0fd4a26b295d476fabc3245a1474cad, type: 3}
 --- !u!4 &796406825
 Transform:
   m_ObjectHideFlags: 0
@@ -2282,6 +2310,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &796406826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796406823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8ebd6699d6b946979ad14307a8b251f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 50
+  height: 50
+  tilePrefab: {fileID: 7550841005411506979, guid: a0fd4a26b295d476fabc3245a1474cad, type: 3}
+  gridSys: {fileID: 796406823}
+  fileName: initMap.csv
 --- !u!1 &824496384
 GameObject:
   m_ObjectHideFlags: 0

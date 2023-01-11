@@ -1,26 +1,36 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GridManager : MonoBehaviour
+public class GridManagerVer2 : MonoBehaviour
 {
     [SerializeField] private int width, height;
-    [SerializeField] Tile tilePrefab;
+    [SerializeField] TestTile tilePrefab;
     [SerializeField] GameObject gridSys;
 
-    Dictionary<Vector2, Tile> tiles;
-    Tile[,] visibleTileMap;
+    Dictionary<Vector2, TestTile> tiles;
+    TestTile[,] visibleTileMap;
     int[] mapSize;
     Camera cam;
     int top,down,right,left;
 
+    [SerializeField] private string fileName;
+    private int[,] mapAxis;
+    private EditMode editMode;
     private void Start()
     {
         cam = MoveCame.editCam;
+        FileReader();
         GenerateGrid();
 
+    }
+    private void OnEnable()
+    {
+        editMode = FindObjectOfType<EditMode>();
     }
     private void Update()
     {
@@ -36,10 +46,12 @@ public class GridManager : MonoBehaviour
         }
         else if (cam.gameObject.GetComponent<MoveCame>().GetCamEdgesArr[(int)Direction.Down] < down)
         {
+            print("camEdge"+cam.gameObject.GetComponent<MoveCame>().GetCamEdgesArr[(int)Direction.Down]);
             ShiftDown();
         }
         else if (cam.gameObject.GetComponent<MoveCame>().GetCamEdgesArr[(int)Direction.Left] < left)
         {
+            print("camEdge"+cam.gameObject.GetComponent<MoveCame>().GetCamEdgesArr[(int)Direction.Left]);
             ShiftLeft();
         }
         else if (cam.gameObject.GetComponent<MoveCame>().GetCamEdgesArr[(int)Direction.Right] >= right)
@@ -47,23 +59,39 @@ public class GridManager : MonoBehaviour
             ShiftRight();
         }
     }
+    private void FileReader()
+    {
+        mapAxis = new int[height, width];
+        StreamReader sr = new StreamReader(Application.dataPath + "/Data/" + fileName);
+
+        for (int y = 0; y < height; y++)
+        {
+            string fileData = sr.ReadLine();
+            int[] data = Array.ConvertAll(fileData.Split(','), int.Parse);
+            
+            for (int x = 0; x < width; x++)
+            {
+                mapAxis[y, x] = data[x];
+            }
+        }
+    }
     void GenerateGrid()
     {
         SetDirectionValue();
-        tiles = new Dictionary<Vector2, Tile>();
-        PoolManager.instance.SetPoolMaxSize(width);
-        visibleTileMap = new Tile[width,height];
+        tiles = new Dictionary<Vector2, TestTile>();
+        PoolManagerVer2.instance.SetPoolMaxSize(width);
+        visibleTileMap = new TestTile[width,height];
         int size = width * height * 2;
         for (int i = 0; i < size; i++)
         {
             var tile = Instantiate(tilePrefab, gridSys.transform);
-            PoolManager.instance.FillObjectPool(tile);
+            PoolManagerVer2.instance.FillObjectPool(tile);
         }
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-               var spawnedTile = PoolManager.instance.SpawnFromPool();
+               var spawnedTile = PoolManagerVer2.instance.SpawnFromPool();
                spawnedTile.transform.position = new Vector2(y, x);
                 // var spawnedTile = Instantiate(tilePrefab,new Vector3(y,x), Quaternion.identity, gridSys.transform);
                 spawnedTile.name = $"tile {x} {y}";
@@ -74,17 +102,19 @@ public class GridManager : MonoBehaviour
                 tiles[new Vector2(y,x)] = spawnedTile;
             }
         }
+        //changed line from newHj
+        transform.position = new Vector3(-(width / 2), -(height / 2), 0);
        
         cam.transform.position = new Vector3((float)width / 2 - 0.05f, (float)height / 2 - 0.05f, -10);
      
     }
 
-    public void DrawColor(int x, int y,Tile spawnedTile)
+    public void DrawColor(int x, int y,TestTile spawnedTile)
     {
         x = Mathf.Abs(x);
         y = Mathf.Abs(y);
         var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);
-        spawnedTile.init(isOffset);
+        spawnedTile.init(isOffset,mapAxis[x,y]);
     }
 
     public void SetDirectionValue()
@@ -94,7 +124,7 @@ public class GridManager : MonoBehaviour
         left = 0;
         right = width-1;
     }
-    public Tile GetTileAtPosition(Vector2 pos)
+    public TestTile GetTileAtPosition(Vector2 pos)
     {
         if (tiles[pos]) return tiles[pos];
         else return null;
@@ -104,7 +134,7 @@ public class GridManager : MonoBehaviour
     {
         for(int i = 0; i < height; i++)
         {
-            PoolManager.instance.GiveBackToPool(visibleTileMap[0,i]);
+            PoolManagerVer2.instance.GiveBackToPool(visibleTileMap[0,i]);
             print(visibleTileMap[0,i]);
             // this code will eventually throw index out of range 
         }
@@ -120,7 +150,7 @@ public class GridManager : MonoBehaviour
         down++;
         for (int i = 0; i < width; i++)
         {
-            Tile newTile =  PoolManager.instance.SpawnFromPool();
+            TestTile newTile =  PoolManagerVer2.instance.SpawnFromPool();
             newTile.gameObject.SetActive(true);
             newTile.transform.position = new Vector2(i+left,top);
             DrawColor(i+left,top,newTile);
@@ -139,7 +169,7 @@ public class GridManager : MonoBehaviour
         //p1 y =0 is disapear for some reason;
         for(int i = height-1; i>=0; i--)
         {
-            PoolManager.instance.GiveBackToPool(visibleTileMap[height-1,i]);
+            PoolManagerVer2.instance.GiveBackToPool(visibleTileMap[height-1,i]);
             // this code will eventually throw index out of range 
         }
         
@@ -155,7 +185,7 @@ public class GridManager : MonoBehaviour
         top--;
         for (int i = 0; i < width; i++)
         {
-            Tile newTile =  PoolManager.instance.SpawnFromPool();
+            TestTile newTile =  PoolManagerVer2.instance.SpawnFromPool();
             print(newTile.gameObject.name);
             newTile.gameObject.SetActive(true);
             DrawColor(i+left,down, newTile);
@@ -171,11 +201,11 @@ public class GridManager : MonoBehaviour
         for(int i = 0; i < height; i++)
         {
             print($"<{width-1} {i}>");
-            PoolManager.instance.GiveBackToPool(visibleTileMap[i,width-1]);
+            PoolManagerVer2.instance.GiveBackToPool(visibleTileMap[i,width-1]);
             // this code will eventually throw index out of range 
         }
 
-        for (int i = width-1; i >=0; i--)
+        for (int i = 0; i < width; i++)
         {
             for (int j = width-2; j >= 0; j--)
             {
@@ -191,14 +221,19 @@ public class GridManager : MonoBehaviour
             {
                 if (j == 0)
                 {
-                    Tile newTile =  PoolManager.instance.SpawnFromPool();
+                    TestTile newTile =  PoolManagerVer2.instance.SpawnFromPool();
                     newTile.gameObject.SetActive(true);
                     newTile.transform.position = new Vector2(left,i + down);
                     DrawColor(left,i + down,newTile);
                     visibleTileMap[i,j] = newTile;
                 }
             }
-          
+            // print(newTile.transform); // becase it called many times 
+            /*
+             * 
+             * height + 1 should be current top height +1 ;
+             p1. it called many time 
+             */
         }
     }
 
@@ -207,7 +242,7 @@ public class GridManager : MonoBehaviour
         for(int i = 0; i < height; i++)
         {
             print($"<{width-1} {i}>");
-            PoolManager.instance.GiveBackToPool(visibleTileMap[i,0]);
+            PoolManagerVer2.instance.GiveBackToPool(visibleTileMap[i,0]);
             // this code will eventually throw index out of range 
         }
 
@@ -229,7 +264,7 @@ public class GridManager : MonoBehaviour
             {
                 if (j == width - 1)
                 {
-                    Tile newTile =  PoolManager.instance.SpawnFromPool();
+                    TestTile newTile =  PoolManagerVer2.instance.SpawnFromPool();
                     newTile.gameObject.SetActive(true);
                     newTile.transform.position = new Vector2(right,i+ down);
                     sb.Append($"<{right} {i + down}> ");
